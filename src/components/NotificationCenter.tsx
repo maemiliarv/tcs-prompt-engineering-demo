@@ -3,13 +3,24 @@ import React, { useEffect, useState } from 'react';
 interface Notification { id: number; text: string; time: string; read: boolean; type: 'tx' | 'alert' | 'promo'; }
 interface Props { }
 
+/**
+ * NotificationCenter muestra un ícono de notificaciones y un panel desplegable con mensajes.
+ * @description Simula la llegada de notificaciones periódicas y permite marcar todas como leídas.
+ * @param props - Props del componente (vacío).
+ * @returns Renderiza un botón de campana y un panel de notificaciones.
+ * @example
+ * <NotificationCenter />
+ */
 const NotificationCenter: React.FC<Props> = () => {
+  // Estado local de las notificaciones visibles en el panel.
   const [notifications, setNotifications] = useState<Notification[]>([
     { id: 1, text: 'Débito $45.00 — Supermaxi El Bosque', time: 'hace 2m', read: false, type: 'tx' },
     { id: 2, text: 'Oferta: 0% comisión transferencias hoy', time: 'hace 1h', read: false, type: 'promo' },
     { id: 3, text: 'Límite de tarjeta al 80%', time: 'hace 3h', read: true, type: 'alert' },
   ]);
+  // Controla si el panel de notificaciones está abierto.
   const [open, setOpen] = useState<boolean>(false);
+  // Contador interno para IDs de notificaciones nuevas.
   const [counter, setCounter] = useState<number>(3);
 
   useEffect(() => {
@@ -27,10 +38,18 @@ const NotificationCenter: React.FC<Props> = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+  /**
+   * Alterna la visibilidad del panel de notificaciones.
+   * @returns void
+   */
   const handleToggle = () => {
     setOpen((prev) => !prev);
   };
 
+  /**
+   * Marca todas las notificaciones como leídas.
+   * @returns void
+   */
   const handleMarkAll = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   };
@@ -129,5 +148,12 @@ const NotificationCenter: React.FC<Props> = () => {
     </div>
   );
 };
+
+/**
+ * MIGRATION NOTES:
+ * - Reemplazado componentDidMount/setInterval y componentWillUnmount/clearInterval por useEffect con cleanup.
+ * - El patrón de actualización de estado con setState fue reemplazado por useState y setters.
+ * - Limitación conocida: las animaciones y transiciones deben verificarse manualmente en UI.
+ */
 
 export default NotificationCenter;
